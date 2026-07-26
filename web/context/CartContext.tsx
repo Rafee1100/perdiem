@@ -33,6 +33,8 @@ function lineId(itemId: string, variationId: string): string {
 function reducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case "ADD": {
+      // The UI already disables "Add to cart" for open-priced variations;
+      // guard here too instead of trusting the caller.
       if (action.variation.price === null) return state;
 
       const id = lineId(action.item.id, action.variation.id);
@@ -89,8 +91,14 @@ export interface AddToCartInput {
   categoryName: string;
 }
 
+interface CartLineDisplay extends CartLine {
+  lineTotal: Money;
+}
+
+export type { CartLineDisplay };
+
 interface CartContextValue {
-  lines: CartLine[];
+  lines: CartLineDisplay[];
   itemCount: number;
   subtotal: Money;
   addToCart: (input: AddToCartInput) => void;
@@ -105,17 +113,23 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, { lines: [] });
 
   const value = useMemo<CartContextValue>(() => {
-    const itemCount = state.lines.reduce((sum, l) => sum + l.quantity, 0);
-
     // Assumes one currency per location, true for a single Square location.
     const currency = state.lines[0]?.unitPrice.currency ?? "USD";
-    const amount = state.lines.reduce(
-      (sum, l) => sum + l.unitPrice.amount * l.quantity,
-      0,
-    );
+
+    let itemCount = 0;
+    let amount = 0;
+    for (const l of state.lines) {
+      itemCount += l.quantity;
+      amount += l.unitPrice.amount * l.quantity;
+    }
+
+    const lines: CartLineDisplay[] = state.lines.map((l) => ({
+      ...l,
+      lineTotal: { amount: l.unitPrice.amount * l.quantity, currency },
+    }));
 
     return {
-      lines: state.lines,
+      lines,
       itemCount,
       subtotal: { amount, currency },
       addToCart: ({ item, variation, quantity, locationName, categoryName }) =>
