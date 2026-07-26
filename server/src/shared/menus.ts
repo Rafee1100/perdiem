@@ -5,13 +5,6 @@ export const moneySchema = z.object({
   currency: z.string().length(3),
 });
 
-export const timeSchema = z.object({
-  startMinute: z.number().int().min(0).max(1440),
-  endMinute: z.number().int().min(0).max(1440),
-  daysOfWeek: z.array(z.number().int().min(1).max(7)).min(1),
-});
-
-export type TimeWindow = z.infer<typeof timeSchema>;
 export type Money = z.infer<typeof moneySchema>;
 
 export const locationSchema = z.object({

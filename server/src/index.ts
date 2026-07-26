@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { getEnv } from "./env";
 import { locationsRouter } from "./routes/locations";
-import { menuRouter } from "./routes/menu";
+import { menuRouter } from "./routes/menus";
 import { itemsRouter } from "./routes/items";
 import { handleError, notFoundHandler } from "./lib/http";
 import { ApiErrorBody } from "./shared";
