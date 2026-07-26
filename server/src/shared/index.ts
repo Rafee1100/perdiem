@@ -1,2 +1,2 @@
-export * from './error'
-export * from './menus'
+export * from "./error";
+export * from "./menus";

@@ -4,7 +4,7 @@ import { ApiError, ApiErrorCodes } from "../shared";
 
 let client: SquareClient | undefined;
 
-export function getSquareClinet(): SquareClient {
+export function getSquareClient(): SquareClient {
   if (client !== undefined) {
     return client;
   }
