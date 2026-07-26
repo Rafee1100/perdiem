@@ -1,6 +1,11 @@
 import express from "express";
 import cors from "cors";
 import { getEnv } from "./env";
+import { locationsRouter } from "./routes/locations";
+import { menuRouter } from "./routes/menu";
+import { itemsRouter } from "./routes/items";
+import { handleError, notFoundHandler } from "./lib/http";
+import { ApiErrorBody } from "./shared";
 
 const app = express();
 app.use(
@@ -13,6 +18,20 @@ app.use(
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
 });
+
+app.use("/api/locations", locationsRouter);
+app.use("/api/menus", menuRouter);
+app.use("/api/items", itemsRouter);
+
+app.use(notFoundHandler);
+app.use(
+  (
+    err: unknown,
+    req: express.Request,
+    res: express.Response<ApiErrorBody>,
+    next: express.NextFunction,
+  ) => handleError(err, req, res, next),
+);
 
 function start(): void {
   try {
