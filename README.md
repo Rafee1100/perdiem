@@ -2,7 +2,7 @@
 
 A small multi-location menu browser on top of Square's Catalog + Locations APIs. Two workspaces: `server/` (Express + TS, owns the Square token) and `web/` (Next.js 16 + React 19). The browser never sees a Square access token — it talks only to the Express backend.
 
-> 🎥 **Loom walkthrough:** [link]
+> 🎥 **Loom walkthrough:** [https://www.loom.com/share/bb90041972004067a52a0bfc40045148]
 
 ---
 
